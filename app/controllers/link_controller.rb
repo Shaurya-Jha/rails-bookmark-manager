@@ -1,4 +1,5 @@
 require "json"
+require "date"
 
 class LinkController < ActionController::Base
   allow_browser versions: :modern
@@ -27,7 +28,9 @@ class LinkController < ActionController::Base
   # create a new link obj
   def create
     @link = Link.new(create_link_params)
-    puts @link
+
+    # initial set the last resurfaced date at to the day it was created
+    @link.last_resurfaced_at = DateTime.now unless @link.last_resurfaced_at.present?
 
     if @link.save
       render json: { status: "ok", code: 201, data: @link }
@@ -35,7 +38,7 @@ class LinkController < ActionController::Base
       render json: { status: "failed", code: 400, message: "failed to create a link" }
     end
   end
-  
+
   # delete a link record as per the id
   def delete
     @link = Link.find_by(id: params[:id])
