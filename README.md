@@ -31,9 +31,15 @@ Action Mailer - build a daily digest template.
 
 - [x] make link schema model
 - [x] setup Link model routes
-- [ ] create controller for link model CRUD operations
+- [x] create controller for link model CRUD operations
+  - GET /api/links - return list of all books
+  - GET /api/links/test - test endpoint status
+  - POST /api/links - create a new Link record
+  - GET /api/links/:id - return a Link with a specific id
+  - DELETE /api/links/:id - delete a Link record from the database as per the link id
 
 ### Things I've learned from this project
 - Model schema
 - Migration generation with database rollback
 - Routing
+- Controllers

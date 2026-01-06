@@ -11,9 +11,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  
+
   # link routes
-  get "/links" => "link#test"
-  get "/links/all" => "link#list"
+  get "/links/test" => "link#test"
+  get "/links" => "link#all"
   post "/links" => "link#create"
+  get "/links/:id" => "link#fetch"
+  delete "/links/:id" => "link#delete"
 end
