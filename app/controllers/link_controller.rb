@@ -6,7 +6,7 @@ class LinkController < ActionController::Base
   protect_from_forgery with: :null_session
 
   def test
-    render json: {status: "ok", code: 200, message: "Welcome to your links."}
+    render json: { status: "ok", code: 200, message: "Welcome to your links." }
   end
 
   # list all links
@@ -19,7 +19,7 @@ class LinkController < ActionController::Base
   def fetch
     @link = Link.find(params[:id])
     if @link
-      render json: { code: 200, data: @link}
+      render json: { code: 200, data: @link }
     else
       render json: { code: 404, message: "Link not found for id #{params[:id]}" }
     end
@@ -42,11 +42,11 @@ class LinkController < ActionController::Base
   # delete a link record as per the id
   def delete
     @link = Link.find_by(id: params[:id])
-    
+
     if @link.destroy
-      render json: { status: 'ok', code: 204, message: 'deleted successfully' }
+      render json: { status: "ok", code: 204, message: "Deleted Successfully" }
     else
-      render json: { status: 'failed', code: 400, message: "failed to delete link with id: #{params[:id]}"}
+      render json: { status: "failed", code: 400, message: "failed to delete link with id: #{params[:id]}" }
     end
   end
 
