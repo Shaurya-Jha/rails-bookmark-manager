@@ -7,18 +7,14 @@ class AuthenticationController < ApplicationController
 
   # register new user
   def register
-    user = User.new(user_params)
+    @user = User.new(user_params)
 
-    # encrypt the password with bcrypt
-    hashed_password = BCrypt::Password.create(params[:password_digest])
-    # cannot update the columns as the column is not saved so haw can we update the column
-    # user.update_column(:password_digest, hashed_password)
-    user.password_digest = hashed_password
-
-    if user.save
-      render json: { message: "User created successfully." }
+    if @user.save
+      # send welcome email to the user
+      UserMailer.with(user: @user).welcome_email.deliver_now
+      render json: { message: "User created successfully." }, status: :created
     else
-      render json: { message: user.errors.full_message }
+      render json: { message: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -27,7 +23,6 @@ class AuthenticationController < ApplicationController
     user = User.find_by(email: params[:email])
 
     if user&.authenticate(params[:password])
-      # token = generate_token(user.id)
       render json: { user_id: user.id, token: AuthenticationTokenService.call(user.id) }, status: :ok
     else
       render json: { error: "Invalid credentials" }, status: :unauthorized
@@ -37,11 +32,6 @@ class AuthenticationController < ApplicationController
   private
   # accept user params and parse them in new user creation
   def user_params
-    params.require(:authentication).permit(:name, :username, :email, :password_digest)
-  end
-
-  # generate jwt token for auth credentials
-  def generate_token(user_id)
-    JWT.encode({ user_id: user_id }, Rails.application.credentials.secret_key_base)
+    params.require(:authentication).permit(:name, :username, :email, :password)
   end
 end
